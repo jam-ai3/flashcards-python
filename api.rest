@@ -24,11 +24,14 @@ Content-Type: application/vnd.openxmlformats-officedocument.presentationml.prese
 ------WebKitFormBoundary--
 
 ###
+GET https://52.15.137.130:443
+
+###
 POST https://52.15.137.130/generate
 Content-Type: application/json
 
 {
-  "inputType": "course_info",
+  "inputType": "courseInfo",
   "text": "{\"university\": \"USC\", \"department\": \"CSCE\", \"courseNumber\": 581, \"courseName\": \"Trusted AI\"}",
   "isFree": false
 }
