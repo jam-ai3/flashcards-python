@@ -1,1 +1,4 @@
 .vercel
+*.pem
+.env
+nginx.conf

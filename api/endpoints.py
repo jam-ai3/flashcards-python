@@ -1,6 +1,9 @@
 # pdf conversion endpoint
+import os
 from flask import jsonify, request
 from flask_cors import cross_origin
+import requests
+import threading
 from utils.pdf_extractor import PdfParser
 from utils.pptx_extractor import get_text_from_pptx
 from utils.gemini import generate
@@ -49,12 +52,38 @@ class GenerateFlashcardsEndpoint:
         @cross_origin(origins="*")
         def generate_flashcards():
             data = request.json
-            input_type = data['inputType']
             text = data['text']
-            is_free = data['isFree']
+            input_type = data['inputType']
+            input_format = data['inputFormat']
+            payment_type = data['paymentType']
+            group_id = data['groupId']
+            user_id = data['userId']
 
-            if input_type == None or text == None or is_free == None:
+            if input_type == None or text == None or payment_type == None or group_id == None or user_id == None:
                 return jsonify({"error": "Missing required fields"}), 400
 
-            flashcards = generate(input_type, text, is_free)
-            return jsonify(flashcards)
+            create_thread(self.generate_and_send_flashcards, group_id,
+                          user_id, input_type, input_format, payment_type, text)
+            return jsonify({"message": "Flashcards generation started"}), 200
+
+    def generate_and_send_flashcards(self, group_id, user_id, input_type, input_format, payment_type, text):
+        flashcards = generate(input_type, text, free=payment_type == "free")
+        body = {
+            "flashcards": flashcards,
+            "groupId": group_id,
+            "userId": user_id,
+            "inputType": input_type,
+            "inputFormat": input_format,
+            "paymentType": payment_type,
+            "prompt": text,
+        }
+        requests.post(
+            f"{os.environ['NODE_SERVER_URL']}/api/flashcards",
+            json=body
+        )
+
+
+def create_thread(func, *args, **kwargs):
+    thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+    thread.start()
+    return thread

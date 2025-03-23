@@ -24,7 +24,10 @@ Content-Type: application/vnd.openxmlformats-officedocument.presentationml.prese
 ------WebKitFormBoundary--
 
 ###
-GET https://52.15.137.130:443
+GET https://52.15.137.130
+
+###
+GET https://python-server.jamai.dev
 
 ###
 POST https://52.15.137.130/generate
