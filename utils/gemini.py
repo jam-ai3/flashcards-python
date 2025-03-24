@@ -6,37 +6,32 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel(model_name="gemini-2.0-flash")
 
 
-def generate(generate_type: str, text: str, free: bool = False):
-
+def generate(generate_type: str, text: str, is_free: bool = False):
     if not text:
         return {"error": "No provided input text"}
-    res = []
 
     if generate_type == 'notes':
-        res = generate_flashcards_from_notes(text, free)
+        return generate_flashcards_from_notes(text, is_free)
     elif generate_type == 'syllabus':
-        res = generate_flashcards_from_syllabus(text, free)
+        return generate_flashcards_from_syllabus(text, is_free)
     elif generate_type == 'courseInfo':
         try:
             course_info = json.loads(text)
-            res = generate_flashcards_from_course_info(
+            return generate_flashcards_from_course_info(
                 course_info["university"],
                 course_info["department"],
                 course_info["courseNumber"],
                 course_info["courseName"],
-                free
+                is_free
             )
         except json.JSONDecodeError as e:
             return {"error": "Invalid input format", "devError": str(e)}
     else:
         return {"error": "Invalid input type", "devError": f"Unrecognized input type: {generate_type}"}
 
-    return res
 
-
-def generate_flashcards_from_syllabus(syllabus: str, free: bool = False):
-
-    if free:
+def generate_flashcards_from_syllabus(syllabus: str, is_free: bool):
+    if is_free:
         prompt = (
             "Given my course syllabus below, generate flashcards to teach the course material. "
             "Respond in the following json format: [{ front: string, back: string }]. "
@@ -59,9 +54,8 @@ def generate_flashcards_from_syllabus(syllabus: str, free: bool = False):
     return get_output(prompt)
 
 
-def generate_flashcards_from_notes(notes: str, free: bool = False):
-
-    if free:
+def generate_flashcards_from_notes(notes: str, is_free: bool):
+    if is_free:
         prompt = (
             f"Given my class notes, your only task is to generate flashcards for studying."
             " Give me a maximum of 4 flash cards, they dont have to explain all of the notes."
@@ -82,9 +76,8 @@ def generate_flashcards_from_notes(notes: str, free: bool = False):
     return get_output(prompt)
 
 
-def generate_flashcards_from_course_info(university: str, department: str, course_number: str, course_name: str, free: bool = False):
-
-    if free:
+def generate_flashcards_from_course_info(university: str, department: str, course_number: str, course_name: str, is_free: bool):
+    if is_free:
         prompt = (
             f"Given information about a course at {university}, generate flashcards to teach the course content."
             f" The course is {department} {course_number}, {course_name} at {university}."
@@ -114,7 +107,7 @@ def get_output(prompt: str):
         return {"error": "Failed to generate flashcards", "devError": str(e)}
 
 
-def remove_formatting(text):
+def remove_formatting(text: str):
     # Remove ```json and ```
     if text.startswith("```json"):
         text = text[7:]
