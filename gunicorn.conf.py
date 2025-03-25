@@ -17,6 +17,10 @@ accesslog = "-"  # Log access to stdout
 errorlog = "-"  # Log errors to stdout
 loglevel = "info"  # Can be "debug", "info", "warning", "error", "critical"
 
+
+# limit_request_field_size = 65536  # 64KB headers
+# limit_request_line = 8190  # Request line length
+
 # Process naming (optional)
 proc_name = "flask_app"
 
