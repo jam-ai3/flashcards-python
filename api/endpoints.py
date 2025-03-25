@@ -67,7 +67,7 @@ class GenerateFlashcardsEndpoint:
             return jsonify({"message": "Flashcards generation started"}), 200
 
     def generate_and_send_flashcards(self, group_id, user_id, input_type, input_format, payment_type, text):
-        flashcards = generate(input_type, text, free=payment_type == "free")
+        flashcards = generate(input_type, text, is_free=payment_type == "free")
         body = {
             "flashcards": flashcards,
             "groupId": group_id,
