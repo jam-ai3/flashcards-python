@@ -19,35 +19,24 @@ def generate(generate_type: str, text: str, is_free: bool = False):
         return {"error": "No provided input text"}
 
     if generate_type == 'notes':
-        return generate_flashcards_from_notes(text, is_free)
+        return get_output(PROMPTS['NOTES']['FREE' if is_free else 'PAID'](text))
     elif generate_type == 'syllabus':
-        return generate_flashcards_from_syllabus(text, is_free)
+        return get_output(PROMPTS['SYLLABUS']['FREE' if is_free else 'PAID'](text))
     elif generate_type == 'courseInfo':
         try:
             course_info = json.loads(text)
-            return generate_flashcards_from_course_info(
-                course_info["university"],
-                course_info["department"],
-                course_info["courseNumber"],
-                course_info["courseName"],
-                is_free
+            return get_output(
+                PROMPTS['COURSE_INFO']['FREE' if is_free else 'PAID'](
+                    course_info['university'],
+                    course_info['department'],
+                    course_info['courseNumber'],
+                    course_info['courseName']
+                )
             )
         except json.JSONDecodeError as e:
             return {"error": "Invalid input format", "devError": str(e)}
     else:
         return {"error": "Invalid input type", "devError": f"Unrecognized input type: {generate_type}"}
-
-
-def generate_flashcards_from_syllabus(syllabus: str, is_free: bool):
-    return get_output(PROMPTS['SYLLABUS']['FREE' if is_free else 'PAID'](syllabus))
-
-
-def generate_flashcards_from_notes(notes: str, is_free: bool):
-    return get_output(PROMPTS['NOTES']['FREE' if is_free else 'PAID'](notes))
-
-
-def generate_flashcards_from_course_info(university: str, department: str, course_number: str, course_name: str, is_free: bool):
-    return get_output(PROMPTS['COURSE_INFO']['FREE' if is_free else 'PAID'](university, department, course_number, course_name))
 
 
 def get_output(prompt: str):
