@@ -10,8 +10,6 @@ ENV_PATH = os.path.join(BASE_DIR, ".env")
 
 load_dotenv(ENV_PATH)
 
-print("main", os.getenv("GEMINI_API_KEY"))
-
 # Add parent directory to path (for util)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Add api directory to path
