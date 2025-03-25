@@ -19,7 +19,7 @@ sys.path.append(os.path.join(os.path.dirname(
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
-app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 25  # 25 MB
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 10  # 25 MB
 
 
 @app.route("/")
