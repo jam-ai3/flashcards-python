@@ -2,3 +2,6 @@
 *.pem
 .env
 nginx.conf
+*.ipynb
+notebooks/
+uploads/
