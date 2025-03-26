@@ -1,7 +1,6 @@
 .vercel
 *.pem
-.env
+*.env.?*
 nginx.conf
 *.ipynb
-notebooks/
 uploads/

@@ -59,7 +59,7 @@ class GenerateFlashcardsEndpoint:
             group_id = data['groupId']
             user_id = data['userId']
 
-            if input_type == None or text == None or payment_type == None or group_id == None or user_id == None:
+            if not text or not input_type or not input_format or not payment_type or not group_id or not user_id:
                 return jsonify({"error": "Missing required fields"}), 400
 
             create_thread(self.generate_and_send_flashcards, group_id,
@@ -67,7 +67,7 @@ class GenerateFlashcardsEndpoint:
             return jsonify({"message": "Flashcards generation started"}), 200
 
     def generate_and_send_flashcards(self, group_id, user_id, input_type, input_format, payment_type, text):
-        flashcards = generate(input_type, text, free=payment_type == "free")
+        flashcards = generate(input_type, text, is_free=payment_type == "free")
         body = {
             "flashcards": flashcards,
             "groupId": group_id,
