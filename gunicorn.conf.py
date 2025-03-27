@@ -4,7 +4,7 @@
 bind = "0.0.0.0:8000"  # Binds to all IPs on port 8000
 
 # Worker processes — Flask usually works well with 2-4 workers
-workers = 4
+workers = 2
 worker_class = "sync"  # Default synchronous worker (good for most Flask apps)
 
 # Performance tuning
