@@ -27,8 +27,6 @@ def hello_world():
     return "hello world!"
 
 
-PdfConversionEndpoint(app)
-PptxConversionEndpoint(app)
 GenerateFlashcardsEndpoint(app)
 
 # app = app.wsgi_app
