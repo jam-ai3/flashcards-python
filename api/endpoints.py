@@ -94,14 +94,11 @@ class ImproveParagraphEndpoint:
             operation_type = data['operation_type']
 
             # The if statements can change
-            try:
-                if (operation_type == "imporve_grammer"):
-                    improved_paragraph = gemini_improve_grammer(context, target_paragraph)
-            except Exception as e:
-                return jsonify({"error": "Failed to improve paragraph", "devError": str(e)}), 500
+            if (operation_type == "imporve_grammer"):
+                improved_paragraph = gemini_improve_grammer(context, target_paragraph)
+                return jsonify(improved_paragraph), 200
 
-            return jsonify({"message": "Paragraph improved",
-                            "improved_paragraph": improved_paragraph}), 200
+            return jsonify({ "error": ""}), 400
 
 
 
