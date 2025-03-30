@@ -4,7 +4,7 @@ from flask import json, jsonify, request
 from flask_cors import cross_origin
 import requests
 import threading
-from utils.gemini import generate
+from utils.gemini import generate, gemini_improve_grammer
 from google.generativeai.types.content_types import BlobDict
 
 
@@ -78,6 +78,32 @@ class GenerateFlashcardsEndpoint:
             f"{os.environ['NODE_SERVER_URL']}/api/flashcards",
             json=body
         )
+
+
+class ImproveParagraphEndpoint:
+
+    def __init__(self, app) -> None:
+        self.app = app
+
+        @app.route("/improve_paragraph", methods =["POST"])
+        @cross_origin(origins="*")
+        def imporve_paragraph():
+            data = request.json
+            context = data['context']
+            target_paragraph = data['target_paragraph']
+            operation_type = data['operation_type']
+
+            # The if statements can change
+            try:
+                if (operation_type == "imporve_grammer"):
+                    improved_paragraph = gemini_improve_grammer(context, target_paragraph)
+            except Exception as e:
+                return jsonify({"error": "Failed to improve paragraph", "devError": str(e)}), 500
+
+            return jsonify({"message": "Paragraph improved",
+                            "improved_paragraph": improved_paragraph}), 200
+
+
 
 
 def create_thread(func, *args, **kwargs):

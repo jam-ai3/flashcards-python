@@ -38,3 +38,15 @@ Content-Type: application/json
   "text": "{\"university\": \"USC\", \"department\": \"CSCE\", \"courseNumber\": 581, \"courseName\": \"Trusted AI\"}",
   "isFree": false
 }
+
+### Test improve paragraph endpoint
+POST http://localhost:5000/improve_paragraph
+Content-Type: application/json
+
+{
+    "context": "In the field of artificial intelligence, machine learning algorithms have revolutionized how computers process and analyze data. Deep learning, a subset of machine learning, has shown remarkable success in various applications.",
+    "target_paragraph": "Neural networks is a powerful tool that helps computer learn from data, but it have some limitation like need lots of data and computing power, also sometimes the result is hard to explain why it make such decision.",
+    "operation_type": "imporve_grammer"
+}
+
+
