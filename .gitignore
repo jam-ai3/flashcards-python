@@ -8,3 +8,4 @@ nginx.conf
 *.png
 *.jpg
 *.jpeg
+*/__pycahe__.py
