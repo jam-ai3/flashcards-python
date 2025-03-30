@@ -3,3 +3,8 @@
 *.env.?*
 nginx.conf
 .env
+*.pdf
+*.pptx
+*.png
+*.jpg
+*.jpeg
