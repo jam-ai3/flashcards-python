@@ -1,10 +1,10 @@
 from io import BytesIO
 from flask import json, jsonify, request, send_file
 from flask_cors import cross_origin
+from weasyprint import HTML
 from utils.gemini import generate, gemini_improve_grammer
 from utils.gemini import generate
 from google.generativeai.types.content_types import BlobDict
-from xhtml2pdf import pisa
 
 
 class GenerateFlashcardsEndpoint:
@@ -94,22 +94,56 @@ class HTMLToPDFEndpoint:
         @cross_origin(origins="*")
         def html_to_pdf():
             data = request.get_json()
-            html = data.get("html")
+            raw_html = data.get("html")
             title = data.get("title", "document")
 
-            if not html:
-                return {"error": "Missing HTML content"}, 400
+            if not raw_html:
+                return {"error": "Missing HTML"}, 400
 
-            pdf_buffer = BytesIO()
-            result = pisa.CreatePDF(src=html, dest=pdf_buffer)
+            # You can also include custom fonts or styles here if needed
+            wrapped_html = f"""
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <style>
+                    body {{
+                        font-family: "Arial", sans-serif;
+                        font-size: 14px;
+                        line-height: 1.6;
+                        padding: 40px;
+                    }}
+                    code {{
+                        background-color: #f5f5f5;
+                        padding: 2px 4px;
+                        font-size: 90%;
+                        border-radius: 4px;
+                        font-family: monospace;
+                    }}
+                    pre {{
+                        background-color: #f5f5f5;
+                        padding: 12px;
+                        border-radius: 6px;
+                        font-family: monospace;
+                        white-space: pre-wrap;
+                    }}
+                    .ProseMirror {{
+                        max-width: 700px;
+                        margin: auto;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="ProseMirror">{raw_html}</div>
+            </body>
+            </html>
+            """
 
-            if result.err:
-                return {"error": "PDF generation failed"}, 500
-
-            pdf_buffer.seek(0)
+            buffer = BytesIO()
+            HTML(string=wrapped_html, base_url=".").write_pdf(buffer)
+            buffer.seek(0)
 
             return send_file(
-                pdf_buffer,
+                buffer,
                 mimetype="application/pdf",
                 as_attachment=True,
                 download_name=f"{title}.pdf"
