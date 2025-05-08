@@ -1,11 +1,10 @@
-# pdf conversion endpoint
-from flask import json, jsonify, request
+from io import BytesIO
+from flask import json, jsonify, request, send_file
 from flask_cors import cross_origin
-import requests
-import threading
 from utils.gemini import generate, gemini_improve_grammer
 from utils.gemini import generate
 from google.generativeai.types.content_types import BlobDict
+from xhtml2pdf import pisa
 
 
 class GenerateFlashcardsEndpoint:
@@ -85,3 +84,33 @@ class ImproveParagraphEndpoint:
                 return jsonify(improved_paragraph), 200
 
             return jsonify({"error": ""}), 400
+
+
+class HTMLToPDFEndpoint:
+    def __init__(self, app) -> None:
+        self.app = app
+
+        @app.route("/pdf", methods=["POST"])
+        @cross_origin(origins="*")
+        def html_to_pdf():
+            data = request.get_json()
+            html = data.get("html")
+            title = data.get("title", "document")
+
+            if not html:
+                return {"error": "Missing HTML content"}, 400
+
+            pdf_buffer = BytesIO()
+            result = pisa.CreatePDF(src=html, dest=pdf_buffer)
+
+            if result.err:
+                return {"error": "PDF generation failed"}, 500
+
+            pdf_buffer.seek(0)
+
+            return send_file(
+                pdf_buffer,
+                mimetype="application/pdf",
+                as_attachment=True,
+                download_name=f"{title}.pdf"
+            )

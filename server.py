@@ -29,6 +29,7 @@ def hello_world():
 
 GenerateFlashcardsEndpoint(app)
 ImproveParagraphEndpoint(app)
+HTMLToPDFEndpoint(app)
 
 # app = app.wsgi_app
 # wsgi_app = app
