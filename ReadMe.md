@@ -29,7 +29,19 @@ This document explains how to set up the Python environment required for the PDF
 5. Install the required packages:
 
    ```bash
-   sudo apt-get install libpangocairo-1.0-0 libpangoft2-1.0-0 libgdk-pixbuf2.0-0 libffi-dev libcairo2
+   sudo apt update && sudo apt install -y \
+      libcairo2 \
+      pango1.0-tools \
+      libpango-1.0-0 \
+      libpangocairo-1.0-0 \
+      libgdk-pixbuf2.0-0 \
+      libffi-dev \
+      libxml2 \
+      libgobject-2.0-0 \
+      libglib2.0-0 \
+      shared-mime-info \
+      fonts-liberation \
+      fonts-dejavu-core
    ```
 
 The environment is now ready to use with the PDF extraction scripts.
