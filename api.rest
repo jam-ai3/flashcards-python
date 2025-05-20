@@ -26,5 +26,15 @@ Content-Type: application/json
     "target_paragraph": "Neural networks is a powerful tool that helps computer learn from data, but it have some limitation like need lots of data and computing power, also sometimes the result is hard to explain why it make such decision.",
     "operation_type": "imporve_grammer"
 }
+###
+POST http://127.0.0.1:5000/docx
+Content-Type: application/json
 
+{
+  "html":"<h1 style=\"text-align: center\">LinkedIn Video 1</h1><p><strong>Introducing jamAI — your AI-powered document editor.</strong><br>Create, edit, and improve your writing — all in one place.</p><p><em>With jamAI, you can draft full documents just like you would in Word or Google Docs — but with powerful AI features built right in to help you write better, faster.s, but also explain the why behind each edit.Need grammar polished? Select a paragraph and hit \"Grammar Check\". jamAI will suggest improvements and explain each edit.</em></p><p><u>Want to improve flow? Use our </u><strong><u>Reorder Tool</u></strong><u> to instantly rearrange sentences in your paragraph — with clear explanations for the suggested structure.</u></p><p><s>And when you want to fine-tune your writing’s length, use the expand or contract icons to adjust your sentence — whether you're looking for brevity or depth.Whether you're writing an essay, assignment or a personal statement jamAI helps you write with clarity — while staying true to your voice.</s></p><ul><li><p>1</p></li><li><p>2</p></li><li><p>3</p></li></ul><p></p><p></p>",
+  "title": "MyDocument"
+}
+###
+@name=MyDocx
+@response.bodyFilename = MyDocument.docx
 

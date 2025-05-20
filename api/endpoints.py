@@ -1,11 +1,13 @@
 from io import BytesIO
 from flask import json, jsonify, request, send_file
 from flask_cors import cross_origin
-from weasyprint import HTML
+# from weasyprint import HTML
+from utils.docx.html2docx import html_to_docx_convertion
 from utils.gemini import generate, gemini_improve_grammer
 from utils.gemini import generate
-from google.generativeai.types.content_types import BlobDict
+# from google.generativeai.types.content_types import BlobDict
 from html2docx import html2docx
+from css_inline import CSSInliner
 
 class GenerateFlashcardsEndpoint:
     def __init__(self, app):
@@ -86,68 +88,68 @@ class ImproveParagraphEndpoint:
             return jsonify({"error": ""}), 400
 
 
-class HTMLToPDFEndpoint:
-    def __init__(self, app) -> None:
-        self.app = app
+# class HTMLToPDFEndpoint:
+#     def __init__(self, app) -> None:
+#         self.app = app
 
-        @app.route("/pdf", methods=["POST"])
-        @cross_origin(origins="*")
-        def html_to_pdf():
-            data = request.get_json()
-            raw_html = data.get("html")
-            title = data.get("title", "document")
+#         @app.route("/pdf", methods=["POST"])
+#         @cross_origin(origins="*")
+#         def html_to_pdf():
+#             data = request.get_json()
+#             raw_html = data.get("html")
+#             title = data.get("title", "document")
 
-            if not raw_html:
-                return {"error": "Missing HTML"}, 400
+#             if not raw_html:
+#                 return {"error": "Missing HTML"}, 400
 
-            # You can also include custom fonts or styles here if needed
-            wrapped_html = f"""
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <style>
-                    body {{
-                        font-family: "Arial", sans-serif;
-                        font-size: 14px;
-                        line-height: 1.6;
-                        padding: 40px;
-                    }}
-                    code {{
-                        background-color: #f5f5f5;
-                        padding: 2px 4px;
-                        font-size: 90%;
-                        border-radius: 4px;
-                        font-family: monospace;
-                    }}
-                    pre {{
-                        background-color: #f5f5f5;
-                        padding: 12px;
-                        border-radius: 6px;
-                        font-family: monospace;
-                        white-space: pre-wrap;
-                    }}
-                    .ProseMirror {{
-                        max-width: 700px;
-                        margin: auto;
-                    }}
-                </style>
-            </head>
-            <body>
-                <div class="ProseMirror">{raw_html}</div>
-            </body>
-            </html>
-            """
+#             # You can also include custom fonts or styles here if needed
+#             wrapped_html = f"""
+#             <html>
+#             <head>
+#                 <meta charset="utf-8">
+#                 <style>
+#                     body {{
+#                         font-family: "Arial", sans-serif;
+#                         font-size: 14px;
+#                         line-height: 1.6;
+#                         padding: 40px;
+#                     }}
+#                     code {{
+#                         background-color: #f5f5f5;
+#                         padding: 2px 4px;
+#                         font-size: 90%;
+#                         border-radius: 4px;
+#                         font-family: monospace;
+#                     }}
+#                     pre {{
+#                         background-color: #f5f5f5;
+#                         padding: 12px;
+#                         border-radius: 6px;
+#                         font-family: monospace;
+#                         white-space: pre-wrap;
+#                     }}
+#                     .ProseMirror {{
+#                         max-width: 700px;
+#                         margin: auto;
+#                     }}
+#                 </style>
+#             </head>
+#             <body>
+#                 <div class="ProseMirror">{raw_html}</div>
+#             </body>
+#             </html>
+#             """
 
-            buffer = BytesIO()
-            HTML(string=wrapped_html, base_url=".").write_pdf(buffer)
-            buffer.seek(0)
+#             buffer = BytesIO()
+#             HTML(string=wrapped_html, base_url=".").write_pdf(buffer)
+#             buffer.seek(0)
 
-            return send_file(
-                buffer,
-                mimetype="application/pdf",
-                as_attachment=True,
-                download_name=f"{title}.pdf"
-            )
+#             return send_file(
+#                 buffer,
+#                 mimetype="application/pdf",
+#                 as_attachment=True,
+#                 download_name=f"{title}.pdf"
+#             )
 
 
 class HTMLToDocxEndpoint:
@@ -160,17 +162,10 @@ class HTMLToDocxEndpoint:
             data = request.get_json()
             raw_html = data.get("html")
             title = data.get("title", "document")
-
             if not raw_html:
                 return {"error": "Missing HTML"}, 400
 
-            # You can also include custom fonts or styles here if needed
-
-            # buffer = BytesIO()
-            # HTML(string=wrapped_html, base_url=".").write_pdf(buffer)
-            # buffer.seek(0)
-            docx_bytes = html2docx(raw_html, title=title)
-
+            docx_bytes = html_to_docx_convertion(raw_html)
             return send_file(
                 docx_bytes,
                 mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
