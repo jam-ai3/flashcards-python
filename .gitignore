@@ -9,3 +9,4 @@ nginx.conf
 *.jpg
 *.jpeg
 */__pycahe__.py
+*.pyc
