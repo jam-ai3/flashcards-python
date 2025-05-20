@@ -5,7 +5,7 @@ from weasyprint import HTML
 from utils.gemini import generate, gemini_improve_grammer
 from utils.gemini import generate
 from google.generativeai.types.content_types import BlobDict
-
+from html2docx import html2docx
 
 class GenerateFlashcardsEndpoint:
     def __init__(self, app):
@@ -148,3 +148,32 @@ class HTMLToPDFEndpoint:
                 as_attachment=True,
                 download_name=f"{title}.pdf"
             )
+
+
+class HTMLToDocxEndpoint:
+    def __init__(self, app) -> None:
+        self.app = app
+
+        @app.route("/docx", methods=["POST"])
+        @cross_origin(origins="*")
+        def html_to_docx():
+            data = request.get_json()
+            raw_html = data.get("html")
+            title = data.get("title", "document")
+
+            if not raw_html:
+                return {"error": "Missing HTML"}, 400
+
+            # You can also include custom fonts or styles here if needed
+
+            # buffer = BytesIO()
+            # HTML(string=wrapped_html, base_url=".").write_pdf(buffer)
+            # buffer.seek(0)
+            docx_bytes = html2docx(raw_html, title=title)
+
+            return send_file(
+                docx_bytes,
+                mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                as_attachment=True,
+                download_name=f"{title}.docx"
+            ) 
