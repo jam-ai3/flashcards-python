@@ -125,7 +125,7 @@ def process_runs(node, paragraph):
         for child in node.children:
             process_runs(child, paragraph)
 
-def html_to_docx_convertion(html) -> io.BytesIO:
+def html_to_docx(html):
     document = Document()
     soup = BeautifulSoup(html, 'html.parser')
     body = soup.body if soup.body else soup
@@ -221,7 +221,6 @@ def html_to_docx_convertion(html) -> io.BytesIO:
                 if div:
                     for child in div.children:
                         process_runs(child, p)
-        file_stream = io.BytesIO()
-        document.save(file_stream)
-        file_stream.seek(0)
-        return file_stream
+    buffer = io.BytesIO()
+    document.save(buffer)
+    return buffer

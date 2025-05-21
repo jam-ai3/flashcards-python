@@ -2,7 +2,7 @@ from io import BytesIO
 from flask import json, jsonify, request, send_file
 from flask_cors import cross_origin
 from weasyprint import HTML
-from utils.docx.html2docx import html_to_docx_convertion
+from utils.docx.html2docx import html_to_docx
 from utils.gemini import generate, gemini_improve_grammer
 from utils.gemini import generate
 from google.generativeai.types.content_types import BlobDict
@@ -156,16 +156,17 @@ class HTMLToDocxEndpoint:
 
         @app.route("/docx", methods=["POST"])
         @cross_origin(origins="*")
-        def html_to_docx():
+        def html_to_docx_conversion():
             data = request.get_json()
             raw_html = data.get("html")
             title = data.get("title", "document")
             if not raw_html:
                 return {"error": "Missing HTML"}, 400
 
-            docx_bytes = html_to_docx_convertion(raw_html)
+            buffer = html_to_docx(raw_html) 
+            buffer.seek(0)
             return send_file(
-                docx_bytes,
+                buffer,
                 mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 as_attachment=True,
                 download_name=f"{title}.docx"
