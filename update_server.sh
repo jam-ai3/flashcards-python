@@ -2,7 +2,7 @@
 # reload_gunicorn.sh - Send HUP signal to Gunicorn master process
 
 # The PID of your Gunicorn master process
-MASTER_PID=154032
+MASTER_PID=16136
 
 # Send the HUP signal
 kill -HUP $MASTER_PID
