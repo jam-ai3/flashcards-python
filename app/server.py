@@ -1,12 +1,14 @@
-from api.endpoints import *
 from flask import Flask
 from flask_cors import CORS
 import os
 import sys
 from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
 ENV_PATH = os.path.join(BASE_DIR, ".env")
+sys.path.append(BASE_DIR)
+from api.endpoints import *
 
 load_dotenv(ENV_PATH)
 
@@ -31,7 +33,7 @@ GenerateFlashcardsEndpoint(app)
 ImproveParagraphEndpoint(app)
 HTMLToPDFEndpoint(app)
 HTMLToDocxEndpoint(app)
-# app = app.wsgi_app
-# wsgi_app = app
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)

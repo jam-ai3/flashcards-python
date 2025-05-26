@@ -27,7 +27,7 @@ Content-Type: application/json
     "operation_type": "imporve_grammer"
 }
 ###
-POST http://127.0.0.1:5001/docx
+POST http://127.0.0.1:5000/docx
 Content-Type: application/json
 
 {
@@ -37,4 +37,20 @@ Content-Type: application/json
 ###
 @name=MyDocx
 @response.bodyFilename = MyDocument.docx
+
+POST http://127.0.0.1:5000/docx
+Content-Type: application/json
+
+{
+  "html": "<p><span style=\"font-family: Times New Roman\">When I waking up in the morning,sunlight is coming through my window,<br>the birds singed already they is noisy<br>and i feel sleepy but happy too,<br>coffee smell is fill fills the air.<br>My mom always makes it for me.<br>Sometimes I forget to say thank you,<br>but she knows I love her very much.</span></p><p>I go outside; the grass is wet<br>from yesterday's rain that fell all day.<br>My shoes get muddy, but I don't care<br>because I like how the earth smells after <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://rrain.My\">rrain.My</a> neighbor’s dog barks at me; he is silly<br>he thinking he is the boss of street,<br>but i just wave at him, and he stop barking<br>and wag his tail like he is my friend.</p><p>The school bus comed late again today,<br>driver he look tired, maybe he no sleep good,<br>we all is talking loud and laughing,<br>The teacher say us to be quiet, but we can’t,<br>math is hard, i don’t understanded fractions<br>but my friend help me, she is smart,<br>lunch is pizza, but it’s cold,<br>still i eat it, because i is hungry.</p><p>after school i runned home fast,<br>my backpack bounce on my back,<br>i see my little sister, she is drawing<br>a cat what look like a potato,<br>she say “look what i maked!”<br>i tell her it’s beautiful, and she smile big,<br>we play outside until the sky is orange,<br>then we go inside, tired but happy.</p><p>nighttime come, i I lay in my bed,<br>thinking about all the things what happened,<br>sometimes life is messy, not perfect,<br>but i is grateful for every day,<br>tomorrow will be new, i I can tries again,<br>dreams come easy, when the heart is light,<br>goodnight world, see you when the sun come up,<br>i sleep now, with peace in my mind.</p>",
+  "title": "book"
+}
+####
+POST http://127.0.0.1:5000/docx
+Content-Type: application/json
+
+{
+  "html": "<p><span style=\"font-family: Times New Roman\">When I waking up in the morning,sunlight is coming through my window,<br>the birds singed already they is noisy<br>and i feel sleepy but happy too,<br>coffee smell is fill fills the air.<br>My mom always makes it for me.<br>Sometimes I forget to say thank you,<br>but she knows I love her very much.</span></p><p><span style=\"font-family: Roboto; font-size: 17pt\">I go outside; the grass is wet<br>from yesterday's rain that fell all day.<br>My shoes get muddy, but I don't care<br>because I like how the earth smells after </span><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://rrain.My\"><span style=\"font-family: Roboto; font-size: 17pt\">rrain.My</span></a><span style=\"font-family: Roboto; font-size: 17pt\"> neighbor’s dog barks at me; he is silly<br>he thinking he is the boss of street,<br>but i just wave at him, and he stop barking<br>and wag his tail like he is my friend.</span></p><p><span style=\"font-family: Georgia; font-size: 13pt\">The school bus comed late again today,<br>driver he look tired, maybe he no sleep good,<br>we all is talking loud and laughing,<br>The teacher say us to be quiet, but we can’t,<br>math is hard, i don’t understanded fractions</span><br>but my friend help me, she is smart,<br>lunch is pizza, but it’s cold,<br>still i eat it, because i is hungry.</p><p>after school i runned home fast,<br>my backpack bounce on my back,<br>i see my little sister, she is drawing<br>a cat what look like a potato,<br>she say “look what i maked!”<br>i tell her it’s beautiful, and she smile big,<br>we play outside until the sky is orange,<br>then we go inside, tired but happy.</p><p>nighttime come, i I lay in my bed,<br>thinking about all the things what happened,<br>sometimes life is messy, not perfect,<br>but i is grateful for every day,<br>tomorrow will be new, i I can tries again,<br>dreams come easy, when the heart is light,<br>goodnight world, see you when the sun come up,<br>i sleep now, with peace in my mind.</p>",
+  "title": "book"
+}
 
