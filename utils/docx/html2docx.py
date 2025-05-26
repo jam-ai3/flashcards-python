@@ -42,6 +42,9 @@ def get_combined_formatting(node):
         'code': False,
         'sup': False,
         'sub': False,
+        'font_size': None,
+        'font_name': None,
+        'font_color': None,
     }
     current = node
     while isinstance(current, Tag):
@@ -54,15 +57,36 @@ def get_combined_formatting(node):
             formatting['underline'] = True
         if name in ['s', 'strike']:
             formatting['strike'] = True
-        if name == 'mark':
-            bg_color = None
-            if current.get('data-color'):
-                bg_color = current['data-color']
-            if not bg_color and current.get('style'):
-                match = re.search(r'background-color:\s*([^;]+)', current['style'])
+        if current.get('style'):
+            style = current['style']
+            # Background color for highlight
+            if name == 'mark' and not formatting['highlight']:
+                match = re.search(r'background-color:\s*([^;]+)', style)
                 if match:
                     bg_color = match.group(1).strip()
-            formatting['highlight'] = css_color_to_wd_color_index(bg_color)
+                    formatting['highlight'] = css_color_to_wd_color_index(bg_color)
+
+            # Font size
+            match_size = re.search(r'font-size:\s*([\d.]+)\s*(px|pt)', style)
+            if match_size:
+                size_value = float(match_size.group(1))
+                formatting['font_size'] = Pt(size_value)
+            if match_size:
+                formatting['font_size'] = Pt(float(match_size.group(1)))
+
+            # Font family
+            match_font = re.search(r'font-family:\s*([^;]+)', style)
+            if match_font:
+                formatting['font_name'] = match_font.group(1).split(',')[0].strip().strip('"\'')  # pick first
+
+            # # Font color
+            # match_color = re.search(r'color:\s*([^;]+)', style)
+            # if match_color:
+            #     hex_color = match_color.group(1).strip()
+            #     if re.match(r'^#([A-Fa-f0-9]{6})$', hex_color):
+            #         hex_val = hex_color.lstrip('#')
+            #         formatting['font_color'] = RGBColor(int(hex_val[0:2], 16), int(hex_val[2:4], 16), int(hex_val[4:6], 16))
+
         if name == 'a' and current.get('href'):
             formatting['hyperlink'] = current['href']
         if name == 'code':
@@ -109,18 +133,30 @@ def process_runs(node, paragraph):
                 run.font.strike = formatting['strike']
                 if formatting['highlight'] is not None:
                     run.font.highlight_color = formatting['highlight']
+
                 if formatting['code']:
                     run.font.name = 'Consolas'
                     run.font.size = Pt(10)
                     run.font.color.rgb = RGBColor(68, 84, 106)
+
                 if formatting['sup']:
                     vertalign = OxmlElement('w:vertAlign')
                     vertalign.set(qn('w:val'), 'superscript')
                     run._element.rPr.append(vertalign)
+
                 if formatting['sub']:
                     vertalign = OxmlElement('w:vertAlign')
                     vertalign.set(qn('w:val'), 'subscript')
                     run._element.rPr.append(vertalign)
+
+                if formatting['font_size']:
+                    run.font.size = formatting['font_size']
+
+                if formatting['font_name']:
+                    run.font.name = formatting['font_name']
+
+                if formatting['font_color']:
+                    run.font.color.rgb = formatting['font_color']        
     elif isinstance(node, Tag):
         for child in node.children:
             process_runs(child, paragraph)
